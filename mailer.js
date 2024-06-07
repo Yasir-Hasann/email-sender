@@ -1,3 +1,4 @@
+// module imports
 const nodemailer = require('nodemailer');
 
 const sendEmail = (email, html, subject) => {
@@ -12,7 +13,7 @@ const sendEmail = (email, html, subject) => {
   });
 
   const mailOptions = {
-    from: process.env.SMTP_EMAIL,
+    from: `No reply <${process.env.SMTP_EMAIL}>`,
     to: email,
     html,
     subject,
@@ -37,6 +38,6 @@ exports.sendMail = (email, name) => {
           <p>Welcome to our services.</p>
       </div>
   </body>
-  </html>`
+  </html>`;
   sendEmail(email, html, 'Subject');
 };
