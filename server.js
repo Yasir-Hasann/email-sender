@@ -4,7 +4,9 @@ require('dotenv').config();
 const express = require('express');
 
 // file imports
-const { sendMail } = require('./mailer');
+const nodemailer = require('./nodemailer');
+const sendgridMailer = require('./sendgrid-mailer');
+const sesMailer = require('./aws-ses-mailer');
 
 // variable initializations
 const app = express();
@@ -15,8 +17,13 @@ app.use(express.json());
 app.use(cors());
 
 // routes
-app.post('/send', (req, res) => {
-  sendMail(req.body.email, req.body.name);
+app.post('/send', async (req, res) => {
+  const { email, name } = req.body;
+  if (!email || !name) throw new Error('Please provide an email and a name');
+
+  await nodemailer.sendTestEmail(email, name);
+  await sendgridMailer.sendTestEmail(email, name);
+  await sesMailer.sendTestEmail(email, name);
   res.status(200).json({ status: 'Email Sent' });
 });
 
