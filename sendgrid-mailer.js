@@ -2,8 +2,10 @@
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-class SendgridMailer {
-  async sendEmail(to, subject, text, html) {
+class SendGridMailer {
+  static instance = null;
+
+  async #sendEmail(to, subject, text, html) {
     const msg = {
       from: `No reply <${process.env.SMTP_EMAIL}>`,
       to,
@@ -37,8 +39,15 @@ class SendgridMailer {
   </body>
   </html>`;
 
-    await sendEmail(email, 'Testing Email', 'This is the test Email', html);
+    await this.#sendEmail(email, 'Testing Email', 'This is the test Email', html);
+  }
+
+  static getInstance() {
+    if (!SendGridMailer.instance) {
+      SendGridMailer.instance = new SendGridMailer();
+    }
+    return SendGridMailer.instance;
   }
 }
 
-module.exports = new SendgridMailer();
+module.exports = SendGridMailer.getInstance();

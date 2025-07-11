@@ -1,10 +1,13 @@
 // module imports
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 
-const SES = new SESClient({ region: process.env.AWS_S3_REGION });
+// variable initialization
+const SES = new SESClient({ region: process.env.AWS_REGION });
 
 class SESMailer {
-  async sendEmail(to, subject, text, html) {
+  static instance = null;
+
+  async #sendEmail(to, subject, text, html) {
     const msg = {
       Destination: {
         CcAddresses: [],
@@ -57,8 +60,15 @@ class SESMailer {
     </body>
     </html>`;
 
-    await this.sendEmail(email, 'Testing Email', 'This is the test Email', html);
+    await this.#sendEmail(email, 'Testing Email', 'This is the test Email', html);
+  }
+
+  static getInstance() {
+    if (!SESMailer.instance) {
+      SESMailer.instance = new SESMailer();
+    }
+    return SESMailer.instance;
   }
 }
 
-module.exports = new SESMailer();
+module.exports = SESMailer.getInstance();

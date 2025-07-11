@@ -13,11 +13,12 @@ const transporter = nodemailer.createTransport({
 
 class NodeMailer {
   static instance = null;
+
   constructor() {
     this.transporter = transporter;
   }
 
-  async sendEmail(email, html, subject) {
+  async #sendEmail(email, html, subject) {
     try {
       await this.transporter.sendMail({ from: `No reply <${process.env.SMTP_EMAIL}>`, to: email, html, subject });
     } catch (error) {
@@ -40,8 +41,15 @@ class NodeMailer {
   </body>
   </html>`;
 
-    await this.sendEmail(email, html, 'Testing Email');
+    await this.#sendEmail(email, html, 'Testing Email');
+  }
+
+  static getInstance() {
+    if (!NodeMailer.instance) {
+      NodeMailer.instance = new NodeMailer();
+    }
+    return NodeMailer.instance;
   }
 }
 
-module.exports = new NodeMailer();
+module.exports = NodeMailer.getInstance();
