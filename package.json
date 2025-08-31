@@ -1,7 +1,7 @@
 {
   "name": "email-sender",
   "version": "1.0.0",
-  "description": "Send email using Nodemailer, SendGrid and AWS SES",
+  "description": "Send email using Nodemailer, SendGrid, Brevo and AWS SES",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,6 +13,7 @@
   "dependencies": {
     "@aws-sdk/client-ses": "^3.844.0",
     "@sendgrid/mail": "^8.1.5",
+    "brevo": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
